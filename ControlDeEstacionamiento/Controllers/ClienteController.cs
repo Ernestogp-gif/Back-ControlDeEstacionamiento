@@ -5,6 +5,7 @@ using ControlDeEstacionamiento.DataAcces;
 using System.Data.SqlClient;
 using System.Data;
 using ControlDeEstacionamiento.Model;
+using ControlDeEstacionamiento.Interfaces;
 
 namespace ControlDeEstacionamiento.Controllers
 {
@@ -21,17 +22,19 @@ namespace ControlDeEstacionamiento.Controllers
 
         [HttpGet]
         [Route("Listar")]
-        public IActionResult Listar()
+        public async Task<IActionResult> Listar()
         {
             List<Cliente> clientes = new List<Cliente>();
 
-            DataCliente dataclientes = new DataCliente(_configuration);
+            IRepository<Cliente> dataclientes = new DataCliente(_configuration);
+
+            
 
             try
             {
-                clientes = dataclientes.ListarClientes();
+                var result = await dataclientes.GetAll();
 
-                return StatusCode(StatusCodes.Status200OK, new { mensaje = "ok", response = clientes });
+                return StatusCode(StatusCodes.Status200OK, new { mensaje = "ok", response = result });
             }
             catch (Exception ex) 
             {
@@ -43,27 +46,28 @@ namespace ControlDeEstacionamiento.Controllers
                 Console.WriteLine("Modulo Cliente: Se ejecuto el Controlador Listar()");
             }
         }
-
+        
         
         [HttpPost]
         [Route("Obtener")]
-        public IActionResult Obtener(string DNI)
+        public async Task<IActionResult> Obtener(string DNI)
         {
-            Cliente cliente = new Cliente();
 
-            DataCliente datacliente = new DataCliente(_configuration);
+            IRepository<Cliente> datacliente = new DataCliente(_configuration);
+
+            var result = default(object);
 
             try
             {
-                cliente = datacliente.Obtener(DNI);
+                result = await datacliente.GetById(DNI);
 
-                if (cliente == null) { Console.WriteLine("No se encontro cliente"); }
+                if (result == null) { Console.WriteLine("No se encontro cliente"); }
 
-                return StatusCode(StatusCodes.Status200OK, new { mensaje = "ok", response = cliente });
+                return StatusCode(StatusCodes.Status200OK, new { mensaje = "ok", response = result });
             }
             catch (Exception error)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = error.Message, response = cliente });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = error.Message, response = result });
                 throw;
             }
             finally
@@ -73,7 +77,7 @@ namespace ControlDeEstacionamiento.Controllers
         }
 
         
-
+        /*
         [HttpPost]
         [Route("Guardar")]
         public IActionResult Guardar([FromBody] Cliente cliente)
@@ -138,6 +142,11 @@ namespace ControlDeEstacionamiento.Controllers
         {
             DataCliente odatacliente = new DataCliente(_configuration);
 
+            IOperaciones operaciones = new DataCliente(_configuration);
+
+            operaciones.Eliminar("");
+
+
             int OK;
 
             string response = "";
@@ -162,6 +171,6 @@ namespace ControlDeEstacionamiento.Controllers
             }
         }
 
-        
+        */
     }
 }
