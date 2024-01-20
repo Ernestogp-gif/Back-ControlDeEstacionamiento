@@ -47,17 +47,12 @@ namespace ControlDeEstacionamiento.DataAcces
                         {
                             while (reader.Read())
                             {
-                                string dni = reader["DNI"].ToString();
-                                string nombre = reader["Nombre"].ToString();
-                                string apellido = reader["Apellido"].ToString();
-                                string telefono = reader["Telefono"].ToString();
-
                                 Cliente cliente = new Cliente
                                 {
-                                    DNI = dni,
-                                    Nombre = nombre,
-                                    Apellido = apellido,
-                                    Telefono = telefono,
+                                    DNI = reader["DNI"].ToString(),
+                                    Nombre = reader["Nombre"].ToString(),
+                                    Apellido = reader["Apellido"].ToString(),
+                                    Telefono = reader["Telefono"].ToString(),
                                 };
 
                                 clientes.Add(cliente);
@@ -98,17 +93,12 @@ namespace ControlDeEstacionamiento.DataAcces
                     {
                         while (reader.Read())
                         {
-                            string dni = reader["DNI"].ToString();
-                            string nombre = reader["Nombre"].ToString();
-                            string apellido = reader["Apellido"].ToString();
-                            string telefono = reader["Telefono"].ToString();
-
                             clientes.Add(new Cliente
                             {
-                                DNI = dni,
-                                Nombre = nombre,
-                                Apellido = apellido,
-                                Telefono = telefono,
+                                DNI = reader["DNI"].ToString(),
+                                Nombre = reader["Nombre"].ToString(),
+                                Apellido = reader["Apellido"].ToString(),
+                                Telefono = reader["Telefono"].ToString(),
                             });
                         }
                     }
@@ -126,43 +116,119 @@ namespace ControlDeEstacionamiento.DataAcces
             finally
             {
                 Console.WriteLine("Se ejecuto el metodo Obtener()");
+            }            
+        }
+        
+        public async Task<int> Create(Cliente cliente)
+        {
+            int OK = 0;
+            try
+            {
+                using (var conexion = new SqlConnection(cadenaSQL))
+                {
+                    conexion.Open();
+                    string consulta = guardarCliente;
+                    SqlCommand cmd = new SqlCommand(consulta, conexion);
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@DNI", cliente.DNI);
+                    cmd.Parameters.AddWithValue("@Nombre", cliente.Nombre);
+                    cmd.Parameters.AddWithValue("@Apellido", cliente.Apellido);
+                    cmd.Parameters.AddWithValue("@Telefono", cliente.Telefono);
+
+                    OK = cmd.ExecuteNonQuery();
+
+                }
+
+                return await Task.FromResult(OK);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error general: " + ex.Message);
+                return OK;
+            }
+            finally
+            {
+                Console.WriteLine("Se ejecuto el metodo Guardar()");
+            }
+            
+        }
+
+        
+        public async Task<Cliente> Update(string DNI, Cliente cliente)
+        {
+            int OK = 0;
+            try
+            {
+                var existing = await GetById(DNI);
+
+                using (var conexion = new SqlConnection(cadenaSQL))
+                {
+                    conexion.Open();
+                    string consulta = editarCliente;
+                    SqlCommand cmd = new SqlCommand(consulta, conexion);
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@DNI", cliente.DNI == "" ? DBNull.Value : cliente.DNI);
+                    cmd.Parameters.AddWithValue("@Nombre", cliente.Nombre is null ? DBNull.Value : cliente.Nombre);
+                    cmd.Parameters.AddWithValue("@Apellido", cliente.Apellido is null ? DBNull.Value : cliente.Apellido);
+                    cmd.Parameters.AddWithValue("@Telefono", cliente.Telefono is null ? DBNull.Value : cliente.Telefono);
+
+                    OK = cmd.ExecuteNonQuery();
+                }
+
+                return await Task.FromResult(existing);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error general: " + ex.Message);
+                return cliente;
+            }
+            finally
+            {
+                Console.WriteLine("Se ejecuto el metodo Editar()");
             }
 
             
         }
+        
+        public async Task<bool> Delete(string DNI)
+        {
+            bool OK = false;
+            try
+            {
+                var cliente = await GetById(DNI);
+                if (cliente != null) 
+                {
+                    using (var conexion = new SqlConnection(cadenaSQL))
+                    {
+                        conexion.Open();
+                        string consulta = eliminarCliente;
+                        SqlCommand cmd = new SqlCommand(consulta, conexion);
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@DNI", DNI);
 
+                        if (cmd.ExecuteNonQuery() == 0)
+                        {
+                            OK = false;
+                        }
+                    }
 
-        /*
-        public async Task<Cliente> Create(Cliente entity)
-        {            
-            clientes.Add(entity);
-            return await Task.FromResult(entity);
+                    OK = true;
+                }
+                return await Task.FromResult(OK);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error general: " + ex.Message);
+                return OK;
+            }
+            finally
+            {
+                Console.WriteLine("Se ejecuto el metodo Eliminar()");
+            }
+
         }
 
         
-        public async Task<Cliente> Update(int id, Cliente entity)
-        {
-            var existing = await GetById(id);
-            if (existing != null)
-            {
-                existing.Nombre = entity.Nombre;
-                // Actualizar otros campos según sea necesario
-            }
-            return await Task.FromResult(existing);
-        }
-
-        public async Task<bool> Delete(int id)
-        {
-            var persona = await GetById(id);
-            if (persona != null)
-            {
-                clientes.Remove(persona);
-                return true;
-            }
-            return false;
-        }
-
-        */
         /*
         public List<Cliente> ListarClientes()
         {

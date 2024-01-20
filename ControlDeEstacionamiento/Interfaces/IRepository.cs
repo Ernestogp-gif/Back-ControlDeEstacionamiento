@@ -5,10 +5,12 @@
         Task<IEnumerable<T>> GetAll();
         
         Task<T> GetById(string id);
-        /*
-        Task<T> Create(T entity);
-        Task<T> Update(int id, T entity);
-        Task<bool> Delete(int id);
-        */
+        
+        Task<int> Create(T entity);
+        
+        Task<T> Update(string id, T entity);
+        
+        Task<bool> Delete(string id);
+        
     }
 }

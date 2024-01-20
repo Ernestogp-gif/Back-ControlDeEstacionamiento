@@ -6,7 +6,7 @@ namespace ControlDeEstacionamiento.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class PlazaController : Controller
+    public class PlazaController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 

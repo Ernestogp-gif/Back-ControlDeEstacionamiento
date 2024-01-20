@@ -24,21 +24,19 @@ namespace ControlDeEstacionamiento.Controllers
         [Route("Listar")]
         public async Task<IActionResult> Listar()
         {
-            List<Cliente> clientes = new List<Cliente>();
-
             IRepository<Cliente> dataclientes = new DataCliente(_configuration);
 
-            
+            var result = default(object);
 
             try
             {
-                var result = await dataclientes.GetAll();
+                result = await dataclientes.GetAll();
 
                 return StatusCode(StatusCodes.Status200OK, new { mensaje = "ok", response = result });
             }
             catch (Exception ex) 
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message, response = clientes });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensaje = ex.Message, response = result });
                 throw;
             }
             finally
@@ -52,7 +50,6 @@ namespace ControlDeEstacionamiento.Controllers
         [Route("Obtener")]
         public async Task<IActionResult> Obtener(string DNI)
         {
-
             IRepository<Cliente> datacliente = new DataCliente(_configuration);
 
             var result = default(object);
@@ -77,20 +74,22 @@ namespace ControlDeEstacionamiento.Controllers
         }
 
         
-        /*
+        
         [HttpPost]
         [Route("Guardar")]
-        public IActionResult Guardar([FromBody] Cliente cliente)
+        public async Task<IActionResult> Guardar([FromBody] Cliente cliente)
         {
-            DataCliente odatacliente = new DataCliente(_configuration);
+            IRepository<Cliente> odatacliente = new DataCliente(_configuration);
 
-            int OK;
+            int OK = 0;
 
             string response = "";
 
             try
             {
-                OK = odatacliente.Guardar(cliente);
+                OK = await odatacliente.Create(cliente);  
+
+                //Console.WriteLine($"OK {OK.}");
 
                 response = (OK == 0) ? "No se pudo guardar" : "guardado";
 
@@ -108,19 +107,17 @@ namespace ControlDeEstacionamiento.Controllers
         
         [HttpPut]
         [Route("Editar")]
-        public IActionResult Editar([FromBody] Cliente cliente)
+        public async Task<IActionResult> Editar([FromBody] Cliente cliente)
         {
             DataCliente odatacliente = new DataCliente(_configuration);
-
-            int OK;
 
             string response = "";
 
             try
             {
-                OK = odatacliente.Editar(cliente);
+                cliente = await odatacliente.Update(cliente.DNI,cliente);
 
-                response = (OK == 0) ? "No se pudo editar" : "editado";
+                response = (cliente == null) ? "No se pudo editar" : "editado";
 
                 return StatusCode(StatusCodes.Status200OK, new { mensaje = response });
             }
@@ -138,26 +135,21 @@ namespace ControlDeEstacionamiento.Controllers
         
         [HttpDelete]
         [Route("Eliminar")]
-        public IActionResult Eliminar(Cliente cliente)
+        public async Task<IActionResult> Eliminar(Cliente cliente)
         {
-            DataCliente odatacliente = new DataCliente(_configuration);
+            IRepository<Cliente> odatacliente = new DataCliente(_configuration);
 
-            IOperaciones operaciones = new DataCliente(_configuration);
-
-            operaciones.Eliminar("");
-
-
-            int OK;
+            bool OK = false;
 
             string response = "";
 
             try
             {
-                OK = odatacliente.Eliminar(cliente.DNI);
+                OK = await odatacliente.Delete(cliente.DNI);
 
-                response = (OK == 0) ? "No se pudo eliminar" : "eliminado";
+                response = (OK == false) ? "No se pudo eliminar" : "eliminado";
 
-                return StatusCode(StatusCodes.Status200OK, new { mensaje = response });
+                return StatusCode(StatusCodes.Status200OK, new { mensaje = response.ToString() });
             }
             catch (Exception error)
             {
@@ -171,6 +163,6 @@ namespace ControlDeEstacionamiento.Controllers
             }
         }
 
-        */
+        
     }
 }
