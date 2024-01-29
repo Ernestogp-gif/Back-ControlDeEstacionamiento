@@ -1,0 +1,103 @@
+PATRONDES DE DISEÑO DE SOFTWARE:
+
+1 PATRONES CREACIONALES 
+(Los patrones creacionales proporcionan varios mecanismos de creación de objetos que incrementan la flexibilidad y la reutilización del código existente.)
+
+Singleton (Singleton):
+Problema: Asegurar que una clase tenga solo una instancia y proporcionar un punto de acceso global a esa instancia.
+Solución: Garantizar que una clase tenga una única instancia y proporcionar un mecanismo para acceder a esa instancia desde cualquier punto del programa.
+
+Builder (Constructor):
+Problema: Facilitar la construcción de objetos complejos paso a paso.
+Solución: Separar el proceso de construcción de un objeto de su representación, permitiendo la creación de diferentes representaciones utilizando el mismo proceso de construcción.
+
+Factory Method (Método de fábrica):
+Problema: Crear objetos de una familia de clases sin especificar la clase concreta.
+Solución: Definir una interfaz para la creación de un objeto, pero dejar que las subclases alteren el tipo de objetos que se crearán.
+
+Abstract Factory (Fábrica abstracta):
+Problema: Proporcionar una interfaz para crear familias de objetos relacionados o dependientes sin especificar sus clases concretas.
+Solución: Definir interfaces para crear familias de objetos relacionados o dependientes sin especificar sus clases concretas.
+
+Prototype (Prototipo):
+Problema: Crear nuevos objetos duplicando un objeto existente, evitando la dependencia de sus clases concretas.
+Solución: Crear nuevos objetos duplicando un prototipo existente, permitiendo la creación de nuevos objetos sin conocer sus clases concretas.
+
+Object Pool (Piscina de objetos):
+Problema: Gestionar eficientemente la reutilización de objetos, especialmente en situaciones de alto costo de creación.
+Solución: Mantener una "piscina" de objetos preinicializados y reutilizarlos en lugar de crear nuevos objetos, mejorando el rendimiento y la eficiencia del programa.
+
+2 PATRONES ESTRUCTURALES
+(Los patrones estructurales explican cómo ensamblar objetos y clases en estructuras más grandes, a la vez que se mantiene la flexibilidad y eficiencia de estas estructuras.)
+
+Adapter (Adaptador):
+Problema: Hacer que interfaces incompatibles trabajen juntas.
+Solución: Proporcionar una interfaz intermedia que permita que objetos con interfaces incompatibles colaboren.
+
+Bridge (Puente):
+Problema: Desacoplar una abstracción de su implementación, permitiendo que ambas varíen independientemente.
+Solución: Dividir una abstracción y su implementación en dos jerarquías separadas, permitiendo que evolucionen de manera independiente.
+
+Composite (Compuesto):
+Problema: Tratar objetos individuales y composiciones de objetos de manera uniforme.
+Solución: Componer objetos en estructuras de árbol para representar tanto objetos individuales como composiciones de objetos, permitiendo que ambos sean tratados de manera uniforme.
+
+Decorator (Decorador):
+Problema: Agregar funcionalidad a objetos de manera dinámica y flexible.
+Solución: Envolver objetos en clases decoradoras que agregan funcionalidades sin cambiar la interfaz de los objetos base.
+
+Facade (Fachada):
+Problema: Proporcionar una interfaz simplificada para un conjunto de interfaces más complejas en un subsistema.
+Solución: Crear una interfaz única y simplificada que sirva como punto de entrada a un conjunto más grande y complejo de clases y funcionalidades.
+
+Flyweight (Peso ligero):
+Problema: Reducir el uso de memoria o recursos compartiendo de manera eficiente objetos similares.
+Solución: Compartir instancias de objetos similares en lugar de crear nuevas instancias, reduciendo así el uso de memoria y recursos.
+
+Proxy (Proxy):
+Problema: Controlar el acceso a un objeto, agregar funcionalidades adicionales o proporcionar un reemplazo parcial.
+Solución: Introducir un objeto intermediario (proxy) que actúa como un sustituto o delegado para controlar el acceso al objeto real.
+
+
+3 PATRONES DE COMPORTAMIENTO
+(Los patrones de comportamiento tratan con algoritmos y la asignación de responsabilidades entre objetos.)
+
+Observer (Observador):
+Problema: Establecer una dependencia de uno a muchos entre objetos, de modo que cuando un objeto cambie su estado, todos sus dependientes sean notificados y actualizados automáticamente.
+Solución: Definir una relación de uno a muchos entre objetos, de modo que cuando el estado de uno cambie, todos los observadores sean notificados y actualizados.
+
+Strategy (Estrategia):
+Problema: Definir una familia de algoritmos, encapsular cada uno de ellos y hacerlos intercambiables.
+Solución: Definir algoritmos como clases separadas, encapsular cada algoritmo en una clase y permitir que los algoritmos sean intercambiables.
+
+Command (Comando):
+Problema: Encapsular una solicitud como un objeto, permitiendo parametrizar clientes con diferentes solicitudes, encolar solicitudes y realizar operaciones reversibles.
+Solución: Encapsular las solicitudes como objetos con una interfaz común, permitiendo que los clientes sean parametrizados con diferentes comandos, se encolen y se realicen operaciones reversibles.
+
+Chain of Responsibility (Cadena de responsabilidad):
+Problema: Evitar acoplamientos fuertes entre el remitente de una solicitud y su receptor, permitiendo que más de un objeto tenga la oportunidad de manejar la solicitud.
+Solución: Pasar la solicitud a través de una cadena de manejadores, donde cada manejador decide si manejar la solicitud o pasarla al siguiente en la cadena.
+
+Iterator (Iterador):
+Problema: Proporcionar un medio para acceder secuencialmente a los elementos de una colección sin exponer su representación subyacente.
+Solución: Definir una interfaz para acceder secuencialmente a los elementos de una colección, permitiendo que diferentes tipos de colecciones sean iteradas de manera uniforme.
+
+State (Estado):
+Problema: Permitir que un objeto altere su comportamiento cuando su estado interno cambia, aparentando cambiar su clase.
+Solución: Modelar los diferentes estados de un objeto como clases separadas y permitir que el objeto cambie de una clase a otra cuando su estado interno cambie.
+
+Visitor (Visitante):
+Problema: Definir una nueva operación sin cambiar las clases de los elementos sobre los que opera.
+Solución: Definir una interfaz de visitante que declare una operación de visita para cada tipo de elemento en la estructura, permitiendo la introducción de nuevas operaciones sin modificar las clases de los elementos.
+
+Memento (Recuerdo):
+Problema: Capturar y externalizar el estado interno de un objeto de manera que el objeto pueda ser restaurado a este estado más tarde.
+Solución: Permitir que un objeto capture su estado interno en un objeto llamado "memento", que luego puede ser almacenado o restaurado según sea necesario.
+
+Template Method (Método plantilla):
+Problema: Definir el esqueleto de un algoritmo en una operación, pero dejar que las subclases proporcionen ciertos pasos del algoritmo sin cambiar su estructura general.
+Solución: Definir una estructura algorítmica en una clase base con pasos comunes y permitir que las subclases implementen o sobrescriban ciertos pasos según sea necesario.
+
+Mediator (Mediador):
+Problema: Reducir las dependencias directas entre los componentes de un sistema al centralizar las interacciones y comunicaciones entre ellos.
+Solución: Introducir un objeto mediador que coordina las interacciones entre varios componentes, permitiendo que éstos se comuniquen entre sí sin conocerse directamente.
