@@ -1,11 +1,21 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
+﻿using Microsoft.AspNetCore.Mvc;
 using ControlDeEstacionamiento.DataAcces;
-using System.Data.SqlClient;
-using System.Data;
 using ControlDeEstacionamiento.Model;
 using ControlDeEstacionamiento.Interfaces;
+using ControlDeEstacionamiento.Model.Builder;
+
+
+using ControlDeEstacionamiento.Interfaces.Builder.ISuperClienteConstructor;
+using ControlDeEstacionamiento.Implementacion.Builder;
+using ControlDeEstacionamiento.Interfaces.FactoryMethod;
+using ControlDeEstacionamiento.Business.Transporte;
+using ControlDeEstacionamiento.Implementacion.FactoryMethod;
+using ControlDeEstacionamiento.Implementacion.Prototype;
+using ControlDeEstacionamiento.Business.ProcesarPagos;
+using ControlDeEstacionamiento.Implementacion.Strategy;
+using ControlDeEstacionamiento.Interfaces.Strategy;
+
+
 
 namespace ControlDeEstacionamiento.Controllers
 {
@@ -163,6 +173,88 @@ namespace ControlDeEstacionamiento.Controllers
             }
         }
 
+
+
+
+        public void UsoDePatron() 
+        {
+            // ***********************   Builder   *****************************************
+            // Crear un constructor concreto
+            ISuperClienteConstructor constructor = new SuperClienteConstructor();
+            constructor.ConstructClientePlaza();
+            constructor.ConstructCliente();
+            constructor.ConstructClienteVehiculo();
+            // Crear un director
+            Director director = new Director(constructor);
+
+            // Construir el producto paso a paso
+            director.ConstruirSuperClienteCompleto();
+
+            // Obtener el resultado final
+            SuperCliente superCliente = constructor.ObtenerSuperCliente();
+
+            // Mostrar el producto final
+            Console.WriteLine(superCliente);
+
+            //**********************************   Factory Method   ********************************
+
+            // Crear creadores concretos
+            ICreador creadorA = new CreadorCamion();
+            ICreador creadorB = new CreadorBarco();
+
+            // Utilizar los creadores para fabricar productos
+            Transporte productoA = creadorA.FabricarTransporte();
+            Transporte productoB = creadorB.FabricarTransporte();
+
+            // Mostrar los productos creados
+            //productoA.Mostrar();
+            //productoB.Mostrar();
+
+
+            //********************************   Prototype   ***********************************
+
+            // Crear un prototipo
+            UsuarioConcreto prototipo = new UsuarioConcreto(1, "PrototipoOriginal");
+
+            // Clonar el prototipo para obtener nuevas instancias
+            UsuarioConcreto copia1 = (UsuarioConcreto)prototipo.ClonePrototype();
+            copia1.Id = 2;
+
+            UsuarioConcreto copia2 = (UsuarioConcreto)prototipo.ClonePrototype();
+            copia2.Nombre = "PrototipoModificado";
+
+            // Mostrar los resultados
+            Console.WriteLine("Prototipo Original: Id={0}, Nombre={1}", prototipo.Id, prototipo.Nombre);
+            Console.WriteLine("Copia 1: Id={0}, Nombre={1}", copia1.Id, copia1.Nombre);
+            Console.WriteLine("Copia 2: Id={0}, Nombre={1}", copia2.Id, copia2.Nombre);
+
+            Console.ReadLine();
+
+            //**************************   Strategy   ***********************************
+
+            // Crear instancias de estrategias concretas
+            IMetodoPago tarjetaCredito = new TarjetaCredito();
+            IMetodoPago payPal = new PayPal();
+            IMetodoPago transferenciaBancaria = new TransferenciaBancaria();
+
+            // Crear un procesador de pagos con una estrategia inicial
+            ProcesadorPagos procesador = new ProcesadorPagos(tarjetaCredito);
+
+            // Realizar un pago utilizando la estrategia actual
+            procesador.RealizarPago(100.0);
+
+            // Cambiar la estrategia en tiempo de ejecución
+            procesador.CambiarMetodoPago(payPal);
+
+            // Realizar otro pago con la nueva estrategia
+            procesador.RealizarPago(50.0);
+
+            Console.ReadLine();
+
+
+
+
+        }
         
     }
 }
